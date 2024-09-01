@@ -11,7 +11,11 @@ export class AuthorizePaymentRequest {
     message: 'expiry_date must be in MM/YY format',
   })
   @IsValidExpiryDate({ message: 'expiry_date must be a valid date' })
-  readonly expiry_date: string;
+  expiry_date: string;
+
+  @IsNumber()
+  @IsNotEmpty()
+  cvv: number;
 
   @IsNumber()
   @IsNotEmpty()

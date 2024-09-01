@@ -18,6 +18,7 @@ export class PaymentController {
     const response = await this.paymentService.authorizePayment(
       body.card_number,
       body.expiry_date,
+      body.cvv,
       body.amount,
     );
     return response;

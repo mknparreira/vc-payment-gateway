@@ -25,6 +25,7 @@ export class PaymentService {
   async authorizePayment(
     cardNumber: string,
     expiryDate: string,
+    cvv: number,
     amount: number,
   ): Promise<{ status: string; auth_token?: string; message?: string }> {
     const provider = this.selectProvider();
@@ -45,6 +46,7 @@ export class PaymentService {
       authorizationToken: token,
       amount,
       expiryDate,
+      cvv,
       provider,
       status: 'authorized',
     });

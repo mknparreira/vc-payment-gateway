@@ -26,6 +26,7 @@ describe('PaymentController', () => {
     const result = await controller.authorize({
       card_number: '4111111111111111',
       expiry_date: '08/25',
+      cvv: 123,
       amount: 100,
     });
 

@@ -32,6 +32,7 @@ describe('PaymentService', () => {
     const result = await service.authorizePayment(
       '4111111111111111',
       '08/25',
+      123,
       100,
     );
     expect(result).toEqual({
@@ -54,6 +55,7 @@ describe('PaymentService', () => {
     const result = await service.authorizePayment(
       '5111111111111111',
       '08/25',
+      123,
       100,
     );
     expect(result).toEqual({
@@ -75,6 +77,7 @@ describe('PaymentService', () => {
     const result = await service.authorizePayment(
       '6111111111111111',
       '08/25',
+      123,
       100,
     );
 
