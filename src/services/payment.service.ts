@@ -76,8 +76,9 @@ export class PaymentService {
       };
     }
 
-    payment.status = 'captured';
     const transactionId = randomUUID();
+    payment.status = 'captured';
+    payment.transactionId = transactionId;
     await payment.save();
 
     return { status: 'success', transaction_id: transactionId };
@@ -85,7 +86,7 @@ export class PaymentService {
 
   async refundPayment(transaction_id: string): Promise<RefundPaymentResponse> {
     const payment = await this.paymentModel.findOne({
-      authorizationToken: transaction_id,
+      transactionId: transaction_id,
     });
 
     if (!payment || payment.status !== 'captured') {

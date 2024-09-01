@@ -6,6 +6,7 @@ export interface PaymentInterface extends Document {
   expiryDate: string;
   cvv: number;
   provider: 'ProviderA' | 'ProviderB';
+  transactionId: string;
   status: 'authorized' | 'captured' | 'refunded';
 }
 
@@ -15,6 +16,7 @@ const paymentSchema = new Schema<PaymentInterface>({
   expiryDate: { type: String, required: true },
   cvv: { type: Number, required: true },
   provider: { type: String, enum: ['ProviderA', 'ProviderB'], required: true },
+  transactionId: { type: String, required: false },
   status: {
     type: String,
     enum: ['authorized', 'captured', 'refunded'],

@@ -21,7 +21,7 @@ describe('PaymentService', () => {
     service = module.get<PaymentService>(PaymentService);
   });
 
-  it('should authorize payment with ProviderA', async () => {
+  it('should authorize payment with Provider A', async () => {
     const mockToken = 'mock-token';
     paymentModel.create.mockResolvedValue({
       authorizationToken: mockToken,
@@ -66,7 +66,7 @@ describe('PaymentService', () => {
     expect(paymentModel.create).not.toHaveBeenCalled();
   }, 20000);
 
-  it('should always succeed authorization with ProviderB', async () => {
+  it('should always succeed authorization with Provider B', async () => {
     const mockToken = 'mock-token';
     paymentModel.create.mockResolvedValue({
       authorizationToken: mockToken,
