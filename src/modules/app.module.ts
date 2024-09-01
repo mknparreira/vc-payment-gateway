@@ -6,6 +6,7 @@ import { AppService } from 'src/services/app.service';
 import { PaymentController } from 'src/controllers/payment.controller';
 import { PaymentService } from 'src/services/payment.service';
 import { PaymentSchema } from 'src/models/payment.model';
+import { RefundSchema } from 'src/models/refund.model';
 
 @Module({
   imports: [
@@ -21,7 +22,10 @@ import { PaymentSchema } from 'src/models/payment.model';
       },
       inject: [ConfigService],
     }),
-    MongooseModule.forFeature([{ name: 'Payment', schema: PaymentSchema }]),
+    MongooseModule.forFeature([
+      { name: 'Payment', schema: PaymentSchema },
+      { name: 'Refund', schema: RefundSchema },
+    ]),
   ],
   controllers: [AppController, PaymentController],
   providers: [AppService, PaymentService],

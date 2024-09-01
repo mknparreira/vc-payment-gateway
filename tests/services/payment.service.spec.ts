@@ -4,17 +4,21 @@ import { PaymentService } from 'src/services/payment.service';
 import { Model } from 'mongoose';
 import { mock, MockProxy } from 'jest-mock-extended';
 import { PaymentInterface } from 'src/models/payment.model';
+import { RefundInterface } from 'src/models/refund.model';
 
 describe('PaymentService', () => {
   let service: PaymentService;
   let paymentModel: MockProxy<Model<PaymentInterface>>;
+  let refundModel: MockProxy<Model<RefundInterface>>;
 
   beforeEach(async () => {
     paymentModel = mock<Model<PaymentInterface>>();
+    refundModel = mock<Model<RefundInterface>>();
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         PaymentService,
         { provide: getModelToken('Payment'), useValue: paymentModel },
+        { provide: getModelToken('Refund'), useValue: refundModel },
       ],
     }).compile();
 

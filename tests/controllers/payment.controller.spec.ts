@@ -50,8 +50,11 @@ describe('PaymentController', () => {
   it('should refund payment successfully', async () => {
     service.refundPayment.mockResolvedValue({ status: 'success' });
 
-    const result = await controller.refund({ transaction_id: 'tx123' });
+    const result = await controller.refund({
+      transaction_id: 'tx123',
+      amount: 100,
+    });
     expect(result).toEqual({ status: 'success' });
-    expect(service.refundPayment).toHaveBeenCalledWith('tx123');
+    expect(service.refundPayment).toHaveBeenCalledWith('tx123', 100);
   });
 });

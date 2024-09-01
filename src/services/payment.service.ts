@@ -4,12 +4,15 @@ import { Model } from 'mongoose';
 import { CapturePaymentResponse } from 'src/dto/response/capture-payment-response.dto';
 import { RefundPaymentResponse } from 'src/dto/response/refund-payment-response.dto';
 import { PaymentInterface } from 'src/models/payment.model';
+import { RefundInterface } from 'src/models/refund.model';
 
 @Injectable()
 export class PaymentService {
   constructor(
     @Inject('PaymentModel')
     private readonly paymentModel: Model<PaymentInterface>,
+    @Inject('RefundModel')
+    private readonly refundModel: Model<RefundInterface>,
   ) {}
 
   private readonly providerWeights = {
@@ -84,7 +87,10 @@ export class PaymentService {
     return { status: 'success', transaction_id: transactionId };
   }
 
-  async refundPayment(transaction_id: string): Promise<RefundPaymentResponse> {
+  async refundPayment(
+    transaction_id: string,
+    amount: number,
+  ): Promise<RefundPaymentResponse> {
     const payment = await this.paymentModel.findOne({
       transactionId: transaction_id,
     });
@@ -96,9 +102,19 @@ export class PaymentService {
       };
     }
 
+    const refundId = randomUUID();
+    const refund = await this.refundModel.create({
+      transactionId: transaction_id,
+      amount,
+      refundId,
+      status: 'requested',
+    });
+
+    await this.refundModel.updateOne({ refundId }, { status: 'completed' });
+
     payment.status = 'refunded';
     await payment.save();
 
-    return { status: 'success' };
+    return { status: 'success', refund_id: refund.refundId };
   }
 }

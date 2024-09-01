@@ -41,6 +41,7 @@ export class PaymentController {
   ): Promise<RefundPaymentResponse> {
     const response = await this.paymentService.refundPayment(
       body.transaction_id,
+      body.amount,
     );
     return response;
   }
