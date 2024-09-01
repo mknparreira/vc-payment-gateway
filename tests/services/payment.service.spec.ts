@@ -29,7 +29,11 @@ describe('PaymentService', () => {
 
     jest.spyOn(service, 'selectProvider').mockReturnValue('ProviderA');
 
-    const result = await service.authorizePayment('4111111111111111', 100);
+    const result = await service.authorizePayment(
+      '4111111111111111',
+      '08/25',
+      100,
+    );
     expect(result).toEqual({
       status: 'success',
       auth_token: expect.any(String),
@@ -47,7 +51,11 @@ describe('PaymentService', () => {
   it('should fail authorization with ProviderA for invalid card number', async () => {
     jest.spyOn(service, 'selectProvider').mockReturnValue('ProviderA');
 
-    const result = await service.authorizePayment('5111111111111111', 100);
+    const result = await service.authorizePayment(
+      '5111111111111111',
+      '08/25',
+      100,
+    );
     expect(result).toEqual({
       status: 'error',
       message: 'Invalid card details',
@@ -64,7 +72,11 @@ describe('PaymentService', () => {
 
     jest.spyOn(service, 'selectProvider').mockReturnValue('ProviderB');
 
-    const result = await service.authorizePayment('6111111111111111', 100);
+    const result = await service.authorizePayment(
+      '6111111111111111',
+      '08/25',
+      100,
+    );
 
     expect(result).toEqual({
       status: 'success',

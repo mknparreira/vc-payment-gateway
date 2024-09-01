@@ -1,6 +1,8 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { randomUUID } from 'crypto';
 import { Model } from 'mongoose';
+import { CapturePaymentResponse } from 'src/dto/response/capture-payment-response.dto';
+import { RefundPaymentResponse } from 'src/dto/response/refund-payment-response.dto';
 import { PaymentInterface } from 'src/models/payment.model';
 
 @Injectable()
@@ -22,6 +24,7 @@ export class PaymentService {
 
   async authorizePayment(
     cardNumber: string,
+    expiryDate: string,
     amount: number,
   ): Promise<{ status: string; auth_token?: string; message?: string }> {
     const provider = this.selectProvider();
@@ -41,6 +44,7 @@ export class PaymentService {
     await this.paymentModel.create({
       authorizationToken: token,
       amount,
+      expiryDate,
       provider,
       status: 'authorized',
     });
@@ -51,7 +55,7 @@ export class PaymentService {
   async capturePayment(
     auth_token: string,
     amount: number,
-  ): Promise<{ status: string; transaction_id?: string; message?: string }> {
+  ): Promise<CapturePaymentResponse> {
     const payment = await this.paymentModel.findOne({
       authorizationToken: auth_token,
     });
@@ -77,9 +81,7 @@ export class PaymentService {
     return { status: 'success', transaction_id: transactionId };
   }
 
-  async refundPayment(
-    transaction_id: string,
-  ): Promise<{ status: string; message?: string }> {
+  async refundPayment(transaction_id: string): Promise<RefundPaymentResponse> {
     const payment = await this.paymentModel.findOne({
       authorizationToken: transaction_id,
     });

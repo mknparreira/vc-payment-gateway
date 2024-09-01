@@ -1,4 +1,10 @@
-import { Controller, Post, Body, Param } from '@nestjs/common';
+import { Controller, Post, Body } from '@nestjs/common';
+import { AuthorizePaymentRequest } from 'src/dto/request/authorize-payment-request.dto';
+import { CapturePaymentRequest } from 'src/dto/request/capture-payment-request.dto';
+import { RefundPaymentRequest } from 'src/dto/request/refund-payment-request.dto';
+import { AuthorizePaymentResponse } from 'src/dto/response/authorize-payment-response.dto';
+import { CapturePaymentResponse } from 'src/dto/response/capture-payment-response.dto';
+import { RefundPaymentResponse } from 'src/dto/response/refund-payment-response.dto';
 import { PaymentService } from 'src/services/payment.service';
 
 @Controller('payments')
@@ -6,29 +12,35 @@ export class PaymentController {
   constructor(private readonly paymentService: PaymentService) {}
 
   @Post('authorize')
-  async authorize(@Body() body: { card_number: string; amount: number }) {
+  async authorize(
+    @Body() body: AuthorizePaymentRequest,
+  ): Promise<AuthorizePaymentResponse> {
     const response = await this.paymentService.authorizePayment(
       body.card_number,
+      body.expiry_date,
       body.amount,
     );
     return response;
   }
 
-  @Post('capture/:token')
+  @Post('capture')
   async capture(
-    @Param('token') token: string,
-    @Body() body: { amount: number },
-  ) {
+    @Body() body: CapturePaymentRequest,
+  ): Promise<CapturePaymentResponse> {
     const response = await this.paymentService.capturePayment(
-      token,
+      body.token,
       body.amount,
     );
     return response;
   }
 
-  @Post('refund/:transaction_id')
-  async refund(@Param('transaction_id') transaction_id: string) {
-    const response = await this.paymentService.refundPayment(transaction_id);
+  @Post('refund')
+  async refund(
+    @Body() body: RefundPaymentRequest,
+  ): Promise<RefundPaymentResponse> {
+    const response = await this.paymentService.refundPayment(
+      body.transaction_id,
+    );
     return response;
   }
 }

@@ -1,9 +1,9 @@
 import { Schema, model, Document } from 'mongoose';
 
-// Define the TypeScript interface for the Payment model
 export interface PaymentInterface extends Document {
   authorizationToken: string;
   amount: number;
+  expiryDate: string;
   provider: 'ProviderA' | 'ProviderB';
   status: 'authorized' | 'captured' | 'refunded';
 }
@@ -11,6 +11,7 @@ export interface PaymentInterface extends Document {
 const paymentSchema = new Schema<PaymentInterface>({
   authorizationToken: { type: String, required: true },
   amount: { type: Number, required: true },
+  expiryDate: { type: String, required: true },
   provider: { type: String, enum: ['ProviderA', 'ProviderB'], required: true },
   status: {
     type: String,
@@ -18,5 +19,7 @@ const paymentSchema = new Schema<PaymentInterface>({
     default: 'authorized',
   },
 });
+
+export const PaymentSchema = paymentSchema;
 
 export const PaymentModel = model<PaymentInterface>('Payment', paymentSchema);
