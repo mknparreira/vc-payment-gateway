@@ -41,8 +41,10 @@ $ docker-compose up
 
 You can view and manage the MongoDB data using Mongo Express at the following URL:
 
-URL: http://localhost:8081/
+http://localhost:8081/
+
 Login: admin
+
 Password: qwert
 
 ## API Endpoints
