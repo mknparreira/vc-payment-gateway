@@ -1,85 +1,145 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# Technical Documentation for Payment Gateway Service
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+## Overview
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+This documentation provides a brief overview of the design of the Payment Gateway Service, including its API endpoints and usage instructions.
 
-## Description
+## Design Overview
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+The Payment Gateway Service is built using the NestJS framework, a progressive Node.js framework for building efficient and scalable server-side applications. The service handles payment operations, including authorization, capture, and refund processes. It employs a global exception filter to manage errors uniformly across the application, ensuring consistent error responses.
 
-## Project setup
+## Instructions
+
+### .env
+
+Add a .env into the project root
 
 ```bash
-$ npm install
+ME_CONFIG_MONGODB_SERVER=mongodb
+
+# Basic Auth Configuration for Mongo Express
+ME_CONFIG_BASICAUTH_USERNAME=admin
+ME_CONFIG_BASICAUTH_PASSWORD=qwert
+
+MONGODB_CONNECT_URL="mongodb://localhost:27017/"
+MONGODB_DATABASE="vc_payments_gateway"
 ```
 
-## Compile and run the project
+### Running Services with Docker
+
+To run specific services with Docker Compose, use the following commands:
 
 ```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+$ docker-compose build
 ```
-
-## Run tests
 
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+$ docker-compose up
 ```
 
-## Resources
+### Mongo Express Access
 
-Check out a few resources that may come in handy when working with NestJS:
+You can view and manage the MongoDB data using Mongo Express at the following URL:
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+URL: http://localhost:8081/
+Login: admin
+Password: qwert
 
-## Support
+## API Endpoints
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+### 1. Authorize Payment
 
-## Stay in touch
+**Endpoint:** POST /payments/authorize
+**Description:** Authorizes a payment by validating card details and storing an authorization token.
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+**Request Body:**
 
-## License
+```json
+{
+  "card_number": "string",
+  "expiry_date": "string",
+  "cvv": "number",
+  "amount": "float"
+}
+```
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+**Response:**
+
+```json
+{
+  "status": "success",
+  "auth_token": "string"
+}
+```
+
+**Errors:**
+400 Bad Request: Invalid card details or request format.
+500 Internal Server Error: General server error.
+
+### 2. Capture Payment
+
+**Endpoint:** POST /payments/capture
+**Description:** Captures an authorized payment based on the provided authorization token and amount.
+
+**Request Body:**
+
+```json
+{
+  "token": "string",
+  "amount": "float"
+}
+```
+
+**Response:**
+
+```json
+{
+  "status": "success",
+  "transaction_id": "string"
+}
+```
+
+**Errors:**
+400 Bad Request: Token invalid, expired, or amount mismatch.
+500 Internal Server Error: General server error.
+
+### 3. Refund Payment
+
+**Endpoint:** POST /payments/refund
+**Description:** Processes a refund for a captured transaction.
+
+**Request Body:**
+
+```json
+{
+  "transaction_id": "string",
+  "amount": "float"
+}
+```
+
+**Response:**
+
+```json
+{
+  "status": "success",
+  "refund_id": "string"
+}
+```
+
+**Errors:**
+400 Bad Request: Invalid transaction ID or refund already processed.
+500 Internal Server Error: General server error.
+
+## Additional Notes
+
+### Framework/Language
+
+The service is built using the NestJS framework wrriten into Node.JS, which provides robust error handling capabilities through a global exception filter.
+
+### Error Handling
+
+The application uses a global exception filter to manage errors across the service. This filter intercepts and handles exceptions, ensuring that all errors are uniformly processed and returned in a consistent format.
+
+### Data Types and Precision
+
+Amount Attribute: The amount attribute in the API requests is defined as a number. In TypeScript, this type supports floating-point numbers (e.g., 5.44). Therefore, the attribute can accept and process decimal values.
