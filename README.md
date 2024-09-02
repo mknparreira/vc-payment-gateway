@@ -27,7 +27,7 @@ MONGODB_DATABASE="vc_payments_gateway"
 
 ### Running Services with Docker
 
-To running all services with Docker Compose, use the following commands:
+To run all services with Docker Compose, use the following commands:
 
 ```bash
 $ docker-compose build
@@ -83,6 +83,7 @@ This interface provides a user-friendly way to explore and test the available en
 ```
 
 **Errors:**
+
 400 Bad Request: Invalid card details or request format.
 
 500 Internal Server Error: General server error.
@@ -111,6 +112,7 @@ This interface provides a user-friendly way to explore and test the available en
 ```
 
 **Errors:**
+
 400 Bad Request: Token invalid, expired, or amount mismatch.
 
 500 Internal Server Error: General server error.
@@ -139,6 +141,7 @@ This interface provides a user-friendly way to explore and test the available en
 ```
 
 **Errors:**
+
 400 Bad Request: Invalid transaction ID or refund already processed.
 
 500 Internal Server Error: General server error.
@@ -147,11 +150,11 @@ This interface provides a user-friendly way to explore and test the available en
 
 ### Framework/Language
 
-The service is built using the NestJS framework wrriten into Node.JS, which provides robust error handling capabilities through a global exception filter.
+The service is built using the NestJS framework written into Node.JS, which provides robust error-handling capabilities through a global exception filter.
 
 ### Error Handling
 
-The application uses a global exception filter to manage errors across the service. This filter intercepts and handles exceptions, ensuring that all errors are uniformly processed and returned in a consistent format.
+The application uses a global exception filter to manage errors across the service. This filter intercepts and handles exceptions, ensuring all errors are uniformly processed and returned consistently.
 
 ### Data Types and Precision
 
