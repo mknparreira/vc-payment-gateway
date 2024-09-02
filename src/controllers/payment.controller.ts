@@ -1,4 +1,5 @@
 import { Controller, Post, Body } from '@nestjs/common';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AuthorizePaymentRequest } from 'src/dto/request/authorize-payment-request.dto';
 import { CapturePaymentRequest } from 'src/dto/request/capture-payment-request.dto';
 import { RefundPaymentRequest } from 'src/dto/request/refund-payment-request.dto';
@@ -7,11 +8,15 @@ import { CapturePaymentResponse } from 'src/dto/response/capture-payment-respons
 import { RefundPaymentResponse } from 'src/dto/response/refund-payment-response.dto';
 import { PaymentService } from 'src/services/payment.service';
 
+@ApiTags('payments')
 @Controller('payments')
 export class PaymentController {
   constructor(private readonly paymentService: PaymentService) {}
 
   @Post('authorize')
+  @ApiOperation({ summary: 'Authorize a payment' })
+  @ApiResponse({ status: 201, description: 'Payment authorized successfully.' })
+  @ApiResponse({ status: 400, description: 'Invalid request parameters.' })
   async authorize(
     @Body() body: AuthorizePaymentRequest,
   ): Promise<AuthorizePaymentResponse> {
@@ -25,6 +30,15 @@ export class PaymentController {
   }
 
   @Post('capture')
+  @ApiOperation({ summary: 'Capture a payment' })
+  @ApiResponse({
+    status: 200,
+    description: 'Payment captured successfully.',
+    type: CapturePaymentResponse,
+  })
+  @ApiResponse({ status: 400, description: 'Invalid request parameters.' })
+  @ApiResponse({ status: 401, description: 'Unauthorized or invalid token.' })
+  @ApiResponse({ status: 500, description: 'Internal server error.' })
   async capture(
     @Body() body: CapturePaymentRequest,
   ): Promise<CapturePaymentResponse> {
@@ -36,6 +50,14 @@ export class PaymentController {
   }
 
   @Post('refund')
+  @ApiOperation({ summary: 'Refund a payment' })
+  @ApiResponse({
+    status: 200,
+    description: 'Payment refunded successfully.',
+    type: RefundPaymentResponse,
+  })
+  @ApiResponse({ status: 400, description: 'Invalid request parameters.' })
+  @ApiResponse({ status: 500, description: 'Internal server error.' })
   async refund(
     @Body() body: RefundPaymentRequest,
   ): Promise<RefundPaymentResponse> {

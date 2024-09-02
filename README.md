@@ -27,7 +27,7 @@ MONGODB_DATABASE="vc_payments_gateway"
 
 ### Running Services with Docker
 
-To run specific services with Docker Compose, use the following commands:
+To running all services with Docker Compose, use the following commands:
 
 ```bash
 $ docker-compose build
@@ -48,6 +48,14 @@ Login: admin
 Password: qwert
 
 ## API Endpoints
+
+### Swagger UI
+
+After building the project, you can access and interact with all API endpoints using Swagger UI at the following URL:
+
+http://localhost:3000/api
+
+This interface provides a user-friendly way to explore and test the available endpoints.
 
 ### 1. Authorize Payment
 
@@ -76,6 +84,7 @@ Password: qwert
 
 **Errors:**
 400 Bad Request: Invalid card details or request format.
+
 500 Internal Server Error: General server error.
 
 ### 2. Capture Payment
@@ -103,6 +112,7 @@ Password: qwert
 
 **Errors:**
 400 Bad Request: Token invalid, expired, or amount mismatch.
+
 500 Internal Server Error: General server error.
 
 ### 3. Refund Payment
@@ -130,6 +140,7 @@ Password: qwert
 
 **Errors:**
 400 Bad Request: Invalid transaction ID or refund already processed.
+
 500 Internal Server Error: General server error.
 
 ## Additional Notes
